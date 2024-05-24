@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">PASApp</string>
+    <string name="introducir_lista_api_rest">API</string>
+    <string name="login" >Login</string>
+    <string name="tituloAplicacion" >Nombre</string>
+    <string name="actividad1"> REST</string>
+    <string name="actividad2">Usuario</string>
+
+    <string name="signed_in">Signed in!</string>
+    <string name="signed_out">Signed out!</string>
+    <string name="signed_cancelled">Signed in cancelled</string>
+    <string name="logout_button">Logout</string>
+    <string name="firebase_user_fmt">Firebase User: %s</string>
+</resources>
