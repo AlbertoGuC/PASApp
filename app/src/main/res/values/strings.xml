@@ -11,4 +11,5 @@
     <string name="signed_cancelled">Signed in cancelled</string>
     <string name="logout_button">Logout</string>
     <string name="firebase_user_fmt">Firebase User: %s</string>
+    <string name="login_button">Login</string>
 </resources>
