@@ -30,9 +30,13 @@ android {
 }
 
 dependencies {
+    //Autenticación con Firebase
     implementation platform('com.google.firebase:firebase-bom:33.0.0')
     implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation 'com.google.firebase:firebase-database:20.0.3'
+    //API REST
+
 
     implementation libs.appcompat
     implementation libs.material

@@ -14,8 +14,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.pasapp.APIRecursos.ActividadAPI;
+import com.example.pasapp.SensoresGrupo.Sensores;
 import com.firebase.ui.auth.AuthUI;
-import com.google.firebase.BuildConfig;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -123,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void lanzarAcitividadLogin(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
+    public void lanzarAcitividadSensores(View view) {
+        Intent intent = new Intent(this, Sensores.class);
         startActivity(intent);
     }
 }
