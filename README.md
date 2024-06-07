@@ -7,7 +7,7 @@
 - [x] Autenticación
 - [ ] API Rest
 - [ ] Visualización de los datos
-- [ ] Envio de datos de sensores a Firebase
+- [x] Envio de datos de sensores a Firebase
 ### Opcionales
 - [ ] Almacenamiento de datos
 - [ ] RxJava
