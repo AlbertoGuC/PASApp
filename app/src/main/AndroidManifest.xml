@@ -27,7 +27,7 @@
             android:name="com.example.pasapp.SensoresGrupo.Sensores"
             android:exported="false" />
         <activity
-            android:name="com.example.pasapp.APIRecursos.ActividadAPI"
+            android:name="com.example.pasapp.Listar.ListarEpisodios"
             android:exported="false" />
     </application>
 
