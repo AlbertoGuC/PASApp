@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id= "@+id/textViewX"
+        android:id="@+id/textViewX"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="X: 0.0"
@@ -26,6 +26,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Z: 0.0"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/textViewGX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GX: 0.0"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/textViewGY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GY: 0.0"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/textViewGZ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GZ: 0.0"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
