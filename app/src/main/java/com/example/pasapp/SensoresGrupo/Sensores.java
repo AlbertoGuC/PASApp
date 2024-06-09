@@ -24,96 +24,143 @@ import java.util.Map;
 public class Sensores extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private Sensor accelerometer, gyroscope;
+    private Sensor acelerometro, giroscopo, pasometro, luzometro, magnetometro;
     private float lastX, lastY, lastZ;
     private float lastGX, lastGY, lastGZ;
-    private Handler handler;
-    private Runnable runnable;
-    private DatabaseReference databaseAccelerometer, databaseGyroscope;
-    private static final long INTERVAL = 10000; // 10 segundos
+    private float pasos;
+    private float luz;
+    private float MagX, MagY, MagZ;
+    private DatabaseReference rtdbAcelerometro, rtdbGiroscopo, rtdbPasos, rtdbLuz,rtdbMagnet;
+    private static final long tiempo = 10000;
 
-    private TextView textViewX, textViewY, textViewZ;
-    private TextView textViewGX, textViewGY, textViewGZ;
-
+    private TextView VAceX, VAceY, VAceZ;
+    private TextView VGX, VGY, VGZ;
+    private TextView VPasos;
+    private TextView VLuz;
+    private TextView VMagX, VMagY, VMagZ;
     private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
-    private String userName;
+    private FirebaseUser usuario;
+    private String nombreUsuario;
+    private Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sensores_vista);
 
-        // Inicializar Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        usuario = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
-            userName = currentUser.getDisplayName(); // Obtener el nombre del usuario
+        if (usuario!= null) {
+            nombreUsuario = usuario.getDisplayName();
         } else {
-            userName = "Unknown"; // O manejar el caso donde el usuario no esté autenticado
+            nombreUsuario = "No Logeado";
         }
+        VAceX= findViewById(R.id.AceX);
+        VAceY = findViewById(R.id.AceY);
+        VAceZ = findViewById(R.id.AceZ);
+        VGX = findViewById(R.id.GX);
+        VGY = findViewById(R.id.GY);
+        VGZ = findViewById(R.id.GZ);
+        VPasos = findViewById(R.id.Pasos);
+        VLuz = findViewById(R.id.Luz);
+        VMagX = findViewById(R.id.MagX);
+        VMagY = findViewById(R.id.MagY);
+        VMagZ = findViewById(R.id.MagZ);
 
-        // Inicializar vistas
-        textViewX = findViewById(R.id.textViewX);
-        textViewY = findViewById(R.id.textViewY);
-        textViewZ = findViewById(R.id.textViewZ);
-        textViewGX = findViewById(R.id.textViewGX);
-        textViewGY = findViewById(R.id.textViewGY);
-        textViewGZ = findViewById(R.id.textViewGZ);
-
-        // Configuración de Firebase
-        databaseAccelerometer = FirebaseDatabase.getInstance().getReference("accelerometer");
-        databaseGyroscope = FirebaseDatabase.getInstance().getReference("gyroscope");
-
-        // Configuración del acelerómetro y giroscopio
+        rtdbAcelerometro = FirebaseDatabase.getInstance().getReference("Acelerómetro");
+        rtdbGiroscopo = FirebaseDatabase.getInstance().getReference("Gisóscopo");
+        rtdbPasos = FirebaseDatabase.getInstance().getReference("Pasos");
+        rtdbLuz = FirebaseDatabase.getInstance().getReference("Luz");
+        rtdbMagnet= FirebaseDatabase.getInstance().getReference("Magnetómetro");
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager != null) {
-            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-            sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+            acelerometro = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            giroscopo = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+            pasometro = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            luzometro = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+            magnetometro = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+            if (pasometro == null) {
+                Toast.makeText(this, "No step counter detected", Toast.LENGTH_SHORT).show();
+            } else {
+                sensorManager.registerListener(this,pasometro,SensorManager.SENSOR_DELAY_NORMAL);
+            }
+            sensorManager.registerListener(this, acelerometro, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, giroscopo, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, luzometro, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, magnetometro, SensorManager.SENSOR_DELAY_NORMAL);
+
         }
 
-        // Configuración del handler para enviar datos cada 10 segundos
-        handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
+        thread = new Thread(() -> {
+            while (!Thread.interrupted()) {
                 sendSensorDataToFirebase();
-                handler.postDelayed(this, INTERVAL);
+                try {
+                    Thread.sleep(tiempo);
+                } catch (InterruptedException e) {
+                    break;
+                }
             }
-        };
-        handler.postDelayed(runnable, INTERVAL);
+        });
+        thread.start();
     }
 
     @Override
     protected void onDestroy() {
+        sendPasosFirebase();
         super.onDestroy();
         sensorManager.unregisterListener(this);
-        handler.removeCallbacks(runnable);
+        if (thread != null && thread.isAlive()) {
+            thread.interrupt();
+        }
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            lastX = event.values[0];
-            lastY = event.values[1];
-            lastZ = event.values[2];
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+                lastX = event.values[0];
+                lastY = event.values[1];
+                lastZ = event.values[2];
 
-            // Actualizar las vistas con los valores del acelerómetro
-            textViewX.setText("X: " + lastX);
-            textViewY.setText("Y: " + lastY);
-            textViewZ.setText("Z: " + lastZ);
-        } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            lastGX = event.values[0];
-            lastGY = event.values[1];
-            lastGZ = event.values[2];
+                VAceX.setText("X: " + lastX);
+                VAceY.setText("Y: " + lastY);
+                VAceZ.setText("Z: " + lastZ);
+                break;
 
-            // Actualizar las vistas con los valores del giroscopio
-            textViewGX.setText("GX: " + lastGX);
-            textViewGY.setText("GY: " + lastGY);
-            textViewGZ.setText("GZ: " + lastGZ);
+            case Sensor.TYPE_GYROSCOPE:
+                lastGX = event.values[0];
+                lastGY = event.values[1];
+                lastGZ = event.values[2];
+
+                VGX.setText("GX: " + lastGX);
+                VGY.setText("GY: " + lastGY);
+                VGZ.setText("GZ: " + lastGZ);
+                break;
+
+            case Sensor.TYPE_STEP_COUNTER:
+                if (pasos == 0) {
+                    pasos = event.values[0];
+                }
+                float nuevosPasos = event.values[0] - pasos;
+                pasos = event.values[0];
+
+                VPasos.setText("Pasos: " + nuevosPasos);
+                break;
+            case Sensor.TYPE_LIGHT:
+                luz = event.values[0];
+
+                VLuz.setText("Intensidad luz: "+luz);
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                MagX = event.values[0];
+                MagY = event.values[1];
+                MagZ = event.values[2];
+
+                VMagX.setText("X: " + MagX);
+                VMagY.setText("Y: " + MagY);
+                VMagZ.setText("Z: " + MagZ);
+                break;
         }
     }
 
@@ -126,16 +173,16 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
         long timestamp = System.currentTimeMillis();
 
         // Enviar datos del acelerómetro
-        String accelId = databaseAccelerometer.push().getKey();
+        String accelId = rtdbAcelerometro.push().getKey();
         Map<String, Object> accelData = new HashMap<>();
-        accelData.put("user", userName);
+        accelData.put("user", nombreUsuario);
         accelData.put("x", lastX);
         accelData.put("y", lastY);
         accelData.put("z", lastZ);
         accelData.put("timestamp", timestamp);
 
         assert accelId != null;
-        databaseAccelerometer.child(accelId).setValue(accelData)
+        rtdbAcelerometro.child(accelId).setValue(accelData)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(Sensores.this, "Accelerometer data sent", Toast.LENGTH_SHORT).show();
@@ -145,21 +192,60 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
                 });
 
         // Enviar datos del giroscopio
-        String gyroId = databaseGyroscope.push().getKey();
+        String gyroId = rtdbGiroscopo.push().getKey();
         Map<String, Object> gyroData = new HashMap<>();
-        gyroData.put("user", userName);
+        gyroData.put("user", nombreUsuario);
         gyroData.put("gx", lastGX);
         gyroData.put("gy", lastGY);
         gyroData.put("gz", lastGZ);
         gyroData.put("timestamp", timestamp);
 
         assert gyroId != null;
-        databaseGyroscope.child(gyroId).setValue(gyroData)
+        rtdbGiroscopo.child(gyroId).setValue(gyroData)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(Sensores.this, "Gyroscope data sent", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(Sensores.this, "Failed to send gyroscope data: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        String luzId = rtdbLuz.push().getKey();
+        Map<String, Object> luzData = new HashMap<>();
+        luzData.put("user", nombreUsuario);
+        luzData.put("IntensidadLum", luz);
+        luzData.put("timestamp", timestamp);
+
+        assert luzId != null;
+        rtdbLuz.child(luzId).setValue(luzData);
+
+        String magId = rtdbMagnet.push().getKey();
+        Map<String, Object> magData = new HashMap<>();
+        magData.put("user", nombreUsuario);
+        magData.put("mx", lastGX);
+        magData.put("my", lastGY);
+        magData.put("mz", lastGZ);
+        magData.put("timestamp", timestamp);
+
+        assert magId != null;
+        rtdbMagnet.child(magId).setValue(magData);
+    }
+    private void sendPasosFirebase(){
+        long timestamp = System.currentTimeMillis();
+
+        String pasoId = rtdbPasos.push().getKey();
+        Map<String, Object> pasosData = new HashMap<>();
+        pasosData.put("user", nombreUsuario);
+        pasosData.put("NPasos", pasos);
+        pasosData.put("timestamp", timestamp);
+
+        assert pasoId != null;
+        rtdbPasos.child(pasoId).setValue(pasosData)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(Sensores.this, "Steps data sent", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(Sensores.this, "Failed to send accelerometer data: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
