@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 
 import com.example.pasapp.Listar.ListarEpisodios;
+import com.example.pasapp.SensoresGrupo.DatosSensores;
 import com.example.pasapp.SensoresGrupo.Sensores;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -129,4 +130,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Sensores.class);
         startActivity(intent);
     }
+
+
 }

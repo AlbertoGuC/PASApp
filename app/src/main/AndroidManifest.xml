@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -15,6 +16,9 @@
         android:theme="@style/Theme.PASApp"
         tools:targetApi="31">
         <activity
+            android:name=".SensoresGrupo.DatosSensores"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -24,10 +28,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.pasapp.SensoresGrupo.Sensores"
+            android:name=".SensoresGrupo.Sensores"
             android:exported="false" />
         <activity
-            android:name="com.example.pasapp.Listar.ListarEpisodios"
+            android:name=".Listar.ListarEpisodios"
             android:exported="false" />
     </application>
 

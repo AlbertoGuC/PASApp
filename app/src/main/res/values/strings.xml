@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">PASApp</string>
     <string name="introducir_lista_api_rest">Poner API</string>
-    <string name="login" >Mandar datos sensores</string>
-    <string name="tituloAplicacion" >Nombre</string>
+    <string name="login">Mandar datos sensores</string>
+    <string name="tituloAplicacion">Nombre</string>
     <string name="actividad1"> API Rest</string>
     <string name="actividad2">Sensor</string>
 
