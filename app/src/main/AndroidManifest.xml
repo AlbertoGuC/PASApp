@@ -9,9 +9,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/nuevoicono"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/nuevoicono_round"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PASApp"
         tools:targetApi="31">
@@ -31,7 +31,7 @@
             android:name=".SensoresGrupo.Sensores"
             android:exported="false" />
         <activity
-            android:name=".Listar.ListarEpisodios"
+            android:name=".Bebidas.ListarBebidas"
             android:exported="false" />
     </application>
 

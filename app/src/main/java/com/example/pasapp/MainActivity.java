@@ -15,8 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 
-import com.example.pasapp.Listar.ListarEpisodios;
-import com.example.pasapp.SensoresGrupo.DatosSensores;
+import com.example.pasapp.Bebidas.ListarBebidas;
 import com.example.pasapp.SensoresGrupo.Sensores;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void lanzarAcitividadAPI(View view) {
-        Intent intent = new Intent(this, ListarEpisodios.class);
+        Intent intent = new Intent(this, ListarBebidas.class);
         startActivity(intent);
     }
 

@@ -1,4 +1,4 @@
-package com.example.pasapp.Listar;
+package com.example.pasapp.Bebidas;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pasapp.Listar.modelos.Capi;
+import com.example.pasapp.Bebidas.Modelos.Drink;
 import com.example.pasapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class SimpsonsAdapter extends RecyclerView.Adapter<SimpsonsAdapter.ViewHolder>{
-    private List<Capi> datos;
-    public SimpsonsAdapter(List<Capi> datos){
+public class CocktailsAdapter extends RecyclerView.Adapter<CocktailsAdapter.ViewHolder>{
+    private List<Drink> datos;
+    public CocktailsAdapter(List<Drink> datos){
         this.datos = datos;
     }
     @NonNull
@@ -29,12 +29,10 @@ public class SimpsonsAdapter extends RecyclerView.Adapter<SimpsonsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String titulo = datos.get(position).getName()+
-                ".\nS"+datos.get(position).getSeason()+
-                " E"+datos.get(position).getEpisode();
+        String titulo = datos.get(position).getStrDrink();
         holder.title.setText(titulo);
-        holder.description.setText(datos.get(position).getDescription());
-        Picasso.get().load(""+datos.get(position).getThumbnailUrl())
+        holder.description.setText(datos.get(position).getStrInstructions());
+        Picasso.get().load(""+datos.get(position).getStrDrinkThumb())
                 .resize(600,400)
                 .into(holder.cover);
     }
@@ -56,3 +54,4 @@ public class SimpsonsAdapter extends RecyclerView.Adapter<SimpsonsAdapter.ViewHo
         }
     }
 }
+

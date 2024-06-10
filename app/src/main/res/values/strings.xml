@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PASApp</string>
+    <string name="app_name">DicAloholZ</string>
     <string name="introducir_lista_api_rest">Poner API</string>
     <string name="login">Mandar datos sensores</string>
     <string name="tituloAplicacion">Nombre</string>
