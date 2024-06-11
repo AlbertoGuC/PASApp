@@ -16,8 +16,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 TablaDatosContract.TablaEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 TablaDatosContract.TablaEntry.COLUMN_SENSOR + " TEXT NOT NULL, " +
                 TablaDatosContract.TablaEntry.COLUMN_MEDIDA1 + " REAL NOT NULL, " +
-                TablaDatosContract.TablaEntry.COLUMN_MEDIDA2 + " REAL NOT NULL, " +
-                TablaDatosContract.TablaEntry.COLUMN_MEDIDA3 + " REAL NOT NULL);");
+                TablaDatosContract.TablaEntry.COLUMN_MEDIDA2 + " REAL, " +
+                TablaDatosContract.TablaEntry.COLUMN_MEDIDA3 + " REAL );");
     }
 
     @Override

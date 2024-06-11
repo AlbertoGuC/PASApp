@@ -15,6 +15,7 @@
         android:layout_marginTop="8dp"
         android:text="Acelerómetro"
         android:textSize="24sp"
+        android:textColor="#333333"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

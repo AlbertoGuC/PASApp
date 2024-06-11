@@ -45,6 +45,8 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
     private Thread thread;
     private DBHelper dbHelper;
     private SQLiteDatabase db;
+    private Handler handler;
+    private Runnable updateGiroscopoTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,7 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
             sensorManager.registerListener(this, luzometro, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, magnetometro, SensorManager.SENSOR_DELAY_NORMAL);
         }
+
         Toast.makeText(this, "Se empezarán a mandar los datos cada 10 segundos", Toast.LENGTH_LONG).show();
         thread = new Thread(() -> {
             while (!Thread.interrupted()) {
@@ -102,8 +105,28 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
             }
         });
         thread.start();
+        actualizarVista();
     }
-
+    private void actualizarVista(){
+        handler = new Handler();
+        updateGiroscopoTask = new Runnable() {
+            @Override
+            public void run() {
+                VMagX.setText("X: " +  String.format("%.02f", MagX));
+                VMagY.setText("Y: " +  String.format("%.02f", MagY));
+                VMagZ.setText("Z: " +  String.format("%.02f", MagZ));
+                VAceX.setText("X: " + String.format("%.02f", lastX));
+                VAceY.setText("Y: " + String.format("%.02f", lastY));
+                VAceZ.setText("Z: " + String.format("%.02f", lastZ));
+                VGX.setText("GX: " + String.format("%.02f", lastGX));
+                VGY.setText("GY: " + String.format("%.02f", lastGY));
+                VGZ.setText("GZ: " + String.format("%.02f", lastGZ));
+                VLuz.setText("Intensidad luz: " + luz);
+                handler.postDelayed(this, 200);
+            }
+        };
+        handler.post(updateGiroscopoTask);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -111,6 +134,7 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
         if (thread != null && thread.isAlive()) {
             thread.interrupt();
         }
+        handler.removeCallbacks(updateGiroscopoTask);
     }
 
     @Override
@@ -121,9 +145,7 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
                 lastY = event.values[1];
                 lastZ = event.values[2];
 
-                VAceX.setText("X: " + lastX);
-                VAceY.setText("Y: " + lastY);
-                VAceZ.setText("Z: " + lastZ);
+
                 break;
 
             case Sensor.TYPE_GYROSCOPE:
@@ -131,23 +153,19 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
                 lastGY = event.values[1];
                 lastGZ = event.values[2];
 
-                VGX.setText("GX: " + lastGX);
-                VGY.setText("GY: " + lastGY);
-                VGZ.setText("GZ: " + lastGZ);
+
                 break;
             case Sensor.TYPE_LIGHT:
                 luz = event.values[0];
 
-                VLuz.setText("Intensidad luz: " + luz);
+
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
                 MagX = event.values[0];
                 MagY = event.values[1];
                 MagZ = event.values[2];
 
-                VMagX.setText("X: " + MagX);
-                VMagY.setText("Y: " + MagY);
-                VMagZ.setText("Z: " + MagZ);
+
                 break;
         }
     }

@@ -3,10 +3,8 @@ package com.example.pasapp.SensoresGrupo;
 import android.provider.BaseColumns;
 
 public final class TablaDatosContract {
-    // Constructor privado para prevenir la instanciación de la clase
     private TablaDatosContract() {}
 
-    // Clase interna que define el contenido de la tabla
     public static class TablaEntry implements BaseColumns {
         public static final String TABLE_NAME = "Sensores";
         public static final String COLUMN_ID = "id";
