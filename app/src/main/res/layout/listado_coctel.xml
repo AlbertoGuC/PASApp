@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D1E8E2"
-    android:backgroundTint="#B0E0E6"
+    android:background="#FDFFFF"
+    android:backgroundTint="#302B2C"
     tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -15,6 +15,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
         android:clickable="true"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"

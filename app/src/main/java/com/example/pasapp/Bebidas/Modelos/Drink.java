@@ -3,9 +3,12 @@ package com.example.pasapp.Bebidas.Modelos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Drink {
-
+    private List<String> ingredientes = new ArrayList<>();
     @SerializedName("idDrink")
     @Expose
     private String idDrink;
@@ -567,5 +570,27 @@ public class Drink {
     public void setDateModified(String dateModified) {
         this.dateModified = dateModified;
     }
+    public String obtenerTodosLosIngredientes() {
+        List<String> ingredientes = new ArrayList<>();
 
+        for (int i = 1; i <= 15; i++) {
+            String ingrediente = obtenerIngrediente( i);
+            if (ingrediente != null && !ingrediente.isEmpty()) {
+                ingredientes.add(ingrediente);
+            } else {
+                break;
+            }
+        }
+
+        return String.join(", ", ingredientes);
+    }
+    private String obtenerIngrediente(int numero) {
+        String ingrediente = "";
+        try {
+            ingrediente = (String) Drink.class.getDeclaredField("strIngredient" + numero).get(this);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return ingrediente;
+    }
 }
