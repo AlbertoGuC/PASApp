@@ -28,7 +28,6 @@ import java.util.Map;
 public class Sensores extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private Sensor acelerometro, giroscopo, luzometro, magnetometro;
     private float lastX, lastY, lastZ;
     private float lastGX, lastGY, lastGZ;
     private float luz;
@@ -39,11 +38,8 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
     private TextView VGX, VGY, VGZ;
     private TextView VLuz;
     private TextView VMagX, VMagY, VMagZ;
-    private FirebaseAuth mAuth;
-    private FirebaseUser usuario;
     private String nombreUsuario;
     private Thread thread;
-    private DBHelper dbHelper;
     private SQLiteDatabase db;
     private Handler handler;
     private Runnable updateGiroscopoTask;
@@ -52,12 +48,12 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sensores_vista);
-
-        dbHelper = new DBHelper(this);
+        Sensor acelerometro, giroscopo, luzometro, magnetometro;
+        DBHelper dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
 
-        mAuth = FirebaseAuth.getInstance();
-        usuario = mAuth.getCurrentUser();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser usuario = mAuth.getCurrentUser();
 
         if (usuario != null) {
             nombreUsuario = usuario.getDisplayName();
@@ -144,35 +140,25 @@ public class Sensores extends AppCompatActivity implements SensorEventListener {
                 lastX = event.values[0];
                 lastY = event.values[1];
                 lastZ = event.values[2];
-
-
                 break;
-
             case Sensor.TYPE_GYROSCOPE:
                 lastGX = event.values[0];
                 lastGY = event.values[1];
                 lastGZ = event.values[2];
-
-
                 break;
             case Sensor.TYPE_LIGHT:
                 luz = event.values[0];
-
-
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
                 MagX = event.values[0];
                 MagY = event.values[1];
                 MagZ = event.values[2];
-
-
                 break;
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // No se necesita implementar en este caso
     }
 
     private void sendSensorDataToFirebase() {
